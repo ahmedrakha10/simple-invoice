@@ -28,13 +28,19 @@
                                         <div class="float-left col-md-6">
 
 
-                                            <label style="font-weight: bold"> Select Customer : <br/>
-                                                <select name='invoice[customer_id]' id="select2" class="form-control">
-                                                    @foreach($customers as $customer)
-                                                        <option value="{{$customer->id}}">{{$customer->name}}</option>
-                                                    @endforeach
-                                                </select>
-                                            </label>
+
+                                                {{--<label style="font-weight: bold"> Select Customer--}}
+                                                    {{--: {{$customer->name  }}<br/>--}}
+                                            <label> Customer Name : <br>
+                                                    <select name='invoice[customer_id]' id="select2"
+                                                            class="form-control">
+                                                        @foreach($customers as $customer)
+                                                            <option
+                                                                value="{{$customer->id}}">{{$customer->name}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </label>
+
                                         </div>
                                         <div class="float-right col-md-4">
                                             <b>Seller details</b>:
@@ -57,19 +63,28 @@
                                                 <th class="text-center"> #</th>
                                                 <th class="text-center"> Product</th>
                                                 <th class="text-center"> Qty</th>
-                                                <th class="text-center"> Price</th>
-                                                <th class="text-center"> Total</th>
+                                                <th class="text-center"> Price ({{ config('invoices.currency')}})</th>
+                                                <th class="text-center"> Total ({{ config('invoices.currency')}})</th>
                                             </tr>
                                             </thead>
                                             <tbody>
                                             <tr id='addr0'>
                                                 <td>1</td>
-                                                <td><input type="text" name='product[]' placeholder='Enter Product Name'
-                                                           class="form-control"/></td>
+                                                <td>
+
+                                                    <select id="product_id" name="product[]" class="form-control name">
+                                                        <option value="" disabled selected>Select your option</option>
+                                                        @foreach($products as $product)
+                                                            <option value="{{$product->id}}"
+                                                                    data-price="{{$product->price}}">{{$product->name}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </td>
                                                 <td><input type="number" name='qty[]' placeholder='Enter Qty'
                                                            class="form-control qty" step="0" min="0"/></td>
-                                                <td><input type="number" name='price[]' placeholder='Enter Price'
-                                                           class="form-control price" step="0.00" min="0"/></td>
+                                                <td><input type="number" name='price[]' placeholder='Price'
+                                                           id="price" class="form-control price" step="0.00" min="0"
+                                                           readonly/></td>
                                                 <td><input type="number" name='total[]' placeholder='0.00'
                                                            class="form-control total" readonly/></td>
                                             </tr>
@@ -92,7 +107,9 @@
                                             <table class="table table-bordered table-hover" id="tab_logic_total">
                                                 <tbody>
                                                 <tr>
-                                                    <th class="text-center">Sub Total</th>
+                                                    <th class="text-center">Sub Total ({{ config('invoices.currency')}}
+                                                        )
+                                                    </th>
                                                     <td class="text-center"><input type="number" name='sub_total'
                                                                                    placeholder='0.00'
                                                                                    class="form-control"
@@ -104,20 +121,24 @@
                                                         <div class="input-group mb-2 mb-sm-0">
                                                             <input type="number" name="invoice[tax_percent]"
                                                                    class="form-control"
-                                                                   id="tax"
+                                                                   id="tax" value="{{$tax}}"
                                                                    placeholder="0">
                                                             <div class="input-group-addon">&nbsp;%</div>
                                                         </div>
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <th class="text-center">Tax Amount</th>
+                                                    <th class="text-center">Tax Amount ({{ config('invoices.currency')}}
+                                                        )
+                                                    </th>
                                                     <td class="text-center"><input type="number" name='tax_amount'
                                                                                    id="tax_amount" placeholder='0.00'
                                                                                    class="form-control" readonly/></td>
                                                 </tr>
                                                 <tr>
-                                                    <th class="text-center">Grand Total</th>
+                                                    <th class="text-center">Grand Total
+                                                        ({{ config('invoices.currency')}})
+                                                    </th>
                                                     <td class="text-center"><input type="number" name='total_amount'
                                                                                    id="total_amount" placeholder='0.00'
                                                                                    class="form-control" readonly/></td>
@@ -143,7 +164,7 @@
 
     <script>
         $(document).ready(function () {
-            $('#select2').select2();
+            $('.select2').select2();
         });
 
         function submitForm(btn) {
@@ -153,7 +174,13 @@
             btn.form.submit();
         }
 
+        $(document).ready(function () {
+            $("#product_id").change(function () {
+                var price = $("#product_id").find(":selected").data("price");
+                $("#price").val(price);
+            });
 
+        });
         $(document).ready(function () {
             var i = 1;
             $("#add_row").click(function () {

@@ -8,7 +8,7 @@
                     <div class="card-header">Customers</div>
 
 
-                @if(Session::has('success'))
+                    @if(Session::has('success'))
                         <p class="alert {{ Session::get('alert-class', 'alert-info') }}">{{ Session::get('success') }}</p>
                     @endif
                     <div class="card-body">
@@ -25,26 +25,28 @@
                                 <th>#</th>
                                 <th>Customer Name</th>
                                 <th>Customer Address</th>
-                                <th>Customer City</th>
+                                {{--<th>Customer City</th>--}}
                                 <th>Customer State</th>
                                 <th>Customer Country</th>
                                 <th>Customer Phone</th>
                                 <th>Customer Email</th>
                                 <th>Customer Postcode/ZIP</th>
+                                <th>New Invoice</th>
                             </tr>
                             @forelse($customers as $customer)
                                 <tr>
                                     <td>{{$loop->iteration}}</td>
                                     <td>{{$customer->name}}</td>
                                     <td>{{$customer->address}}</td>
-                                    <td>{{$customer->city}}</td>
+                                    {{--<td>{{$customer->city}}</td>--}}
                                     <td>{{$customer->state}}</td>
-                                    <td>{{$customer->country}}</td>
+                                    <td>{{$customer->country->title ?? '' }}</td>
                                     <td>{{$customer->phone}}</td>
                                     <td>{{$customer->email}}</td>
                                     <td>{{$customer->postcode}}</td>
+                                    <td><a class="btn btn-xs btn-primary" href="{{route('invoice.create')}}?customer_id={{$customer->id}}">New Invoice</a></td>
                                 </tr>
-                                @empty
+                            @empty
                                 <tr>
                                     <td colspan="2">No customers found</td>
                                 </tr>

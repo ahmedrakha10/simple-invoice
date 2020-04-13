@@ -6,6 +6,7 @@ use App\Models\Customer;
 use App\Models\CustomerField;
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
+use App\Models\Product;
 use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Http\Request;
 
@@ -26,10 +27,13 @@ class InvoiceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
         $customers = Customer::all();
-        return view('invoices.create',compact('customers'));
+        $customer = Customer::find($request->customer_id);
+        $tax = '20';
+        $products = Product::all();
+        return view('invoices.create', compact('customer', 'products', 'tax', 'customers'));
     }
 
     /**
@@ -46,7 +50,7 @@ class InvoiceController extends Controller
             if (isset($request->qty[$i]) && isset($request->price[$i])) {
                 InvoiceItem::create([
                                         'invoice_id' => $invoice->id,
-                                        'name'       => $request->product[$i],
+                                        'product_id' => $request->product[$i],
                                         'quantity'   => $request->qty[$i],
                                         'price'      => $request->price[$i]
                                     ]);
@@ -71,8 +75,8 @@ class InvoiceController extends Controller
     public function download($id)
     {
         $invoice = Invoice::findOrFail($id);
-        $pdf = PDF::loadView('invoices.pdf',compact('invoice'));
-        return $pdf->stream('invoice ' .$invoice->invoice_number. '.pdf');
+        $pdf = PDF::loadView('invoices.pdf', compact('invoice'));
+        return $pdf->stream('invoice ' . $invoice->invoice_number . '.pdf');
     }
 
     /**

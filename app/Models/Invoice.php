@@ -9,12 +9,15 @@ class Invoice extends Model
     protected $table      = 'invoices';
     public    $timestamps = true;
     protected $fillable   = ['customer_id', 'invoice_number', 'invoice_date', 'tax_percent'];
+
     //protected $appends    = ['total_amount'];
 
     public function customer()
     {
         return $this->belongsTo(Customer::class);
     }
+
+
 
     public function invoiceItems()
     {

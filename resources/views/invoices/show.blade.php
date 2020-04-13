@@ -90,7 +90,7 @@
                                         @foreach ($invoice->invoiceItems as $item)
                                             <tr id='addr0'>
                                                 <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $item->name }}</td>
+                                                <td>{{ optional($item->product)->name }}</td>
                                                 <td>{{ $item->quantity }}</td>
                                                 <td>{{ $item->price }}</td>
                                                 <td>{{ number_format($item->quantity * $item->price, 2) }}</td>

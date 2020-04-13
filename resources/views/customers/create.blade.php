@@ -33,8 +33,15 @@
                                                 <div class="alert-danger">{{ $errors->first('city') }}</div>
                                             @endif
                                             State: <input type="text" name='state' class="form-control"/>
-                                            Country*: <input type="text" name='country' class="form-control"
-                                                             required/>
+                                            Country*: <select name='country_id' class="form-control"
+                                                              required>
+                                                @foreach($countries as $country)
+                                                    <option value="{{$country->id}}">{{$country->title}}
+                                                        ({{$country->shortcode}})
+                                                    </option>
+                                                @endforeach
+                                                <option></option>
+                                            </select>
                                             @if($errors->has('country'))
                                                 <div class="alert-danger">{{ $errors->first('country') }}</div>
                                             @endif
@@ -88,6 +95,6 @@
             // submit the form
             btn.form.submit();
         }
-        
+
     </script>
 @endpush

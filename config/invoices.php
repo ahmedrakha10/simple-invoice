@@ -16,5 +16,6 @@ return [
         'additional_info' => [
             'Vat Number' => 'xxxx xxxx xxxx'
         ]
-    ]
+    ],
+    'currency'       => '$'
 ];

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Country;
 use App\Models\Customer;
 use App\Models\CustomerField;
 use Illuminate\Http\Request;
@@ -26,17 +27,18 @@ class CustomerController extends Controller
      */
     public function create()
     {
-        return view('customers.create');
+        $countries = Country::all();
+        return view('customers.create', compact('countries'));
     }
 
     public function store(Request $request)
     {
         $rules = [
-            'name'    => 'required',
-            'address' => 'required',
-            'city'    => 'required',
-            'country' => 'required',
-            'state'   => '',
+            'name'       => 'required',
+            'address'    => 'required',
+            'city'       => 'required',
+            'country_id' => 'required|exists:countries,id',
+            'state'      => '',
         ];
         $this->validate($request, $rules);
         $customer = Customer::create($request->all());
